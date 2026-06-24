@@ -4,7 +4,7 @@ ring wraith
 orc/uruk-hai
 hobbit
 dwarf
-tree
+ent
 human
 gollum
 dragon

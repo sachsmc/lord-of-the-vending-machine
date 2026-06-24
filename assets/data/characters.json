@@ -23,7 +23,7 @@
     "file": "assets/images/dwarf.png",
     "description": "Short, stocky, long-lived miners and smiths who dwell in mountain halls. Fiercely proud of their clans, their craft, and their beards."
   },
-  "tree": {
+  "ent": {
     "file": "assets/images/tree.png",
     "description": "Ancient tree-herders of Fangorn Forest, the oldest living things in Middle-earth. Slow to speak, slow to decide, and formidable when roused to action."
   },
