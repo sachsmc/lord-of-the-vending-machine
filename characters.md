@@ -12,5 +12,5 @@ eagle
 warg
 giant spider
 valar
-maiar
+sauron
 mearas

@@ -55,9 +55,9 @@
     "file": "assets/images/valar.png",
     "description": "The fourteen angelic powers who shaped the world under Ilúvatar. Each governs a domain — sea, sky, earth, craft — and dwells in the Undying Lands of Valinor."
   },
-  "maiar": {
-    "file": "assets/images/maiar.png",
-    "description": "Lesser angelic spirits, including Gandalf, Saruman, and the Balrogs. They can take physical form and walk among mortals, though their true nature is far older than the world."
+  "sauron": {
+    "file": "assets/images/sauron.png",
+    "description": "A Maia of immense power who served Morgoth before rising to become the Dark Lord of Mordor, forger of the One Ring and architect of a dominion designed to bind all free peoples of Middle-earth to his will."
   },
   "mearas": {
     "file": "assets/images/mearas.png",
