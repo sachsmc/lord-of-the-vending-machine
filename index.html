@@ -277,8 +277,6 @@
     #result-images {
       display: flex;
       justify-content: center;
-      align-items: flex-start;
-      gap: 24px;
       margin-bottom: 32px;
     }
 
@@ -287,25 +285,18 @@
       flex-direction: column;
       align-items: center;
       gap: 10px;
-      flex: 1;
-      max-width: 200px;
+      max-width: 320px;
+      width: 100%;
     }
 
     #result-images img {
       width: 100%;
       aspect-ratio: 1 / 1;
       object-fit: cover;
-      border-radius: 12px;
+      border-radius: 14px;
       border: 2px solid var(--gold);
-      box-shadow: 0 0 30px var(--gold-glow), var(--shadow);
-    }
-
-    #result-images figcaption {
-      font-family: 'Cinzel', serif;
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      text-transform: capitalize;
-      letter-spacing: 0.08em;
+      box-shadow: 0 0 40px var(--gold-glow), var(--shadow);
+      image-rendering: pixelated;
     }
 
     #result-description {
@@ -470,10 +461,15 @@
     `;
   }
 
+  function toSlug(str) {
+    return str.replace(/\//g, '-').replace(/\s+/g, '-');
+  }
+
   function buildResult() {
     const drink     = data.drinks[state.drink];
     const character = data.characters[state.character];
     const desc      = data.combinations[state.character][state.drink];
+    const comboImg  = `assets/images/combinations/${toSlug(state.character)}--${toSlug(state.drink)}.png`;
 
     return `
       ${header()}
@@ -481,12 +477,7 @@
         <h2>${state.character}<br><span style="font-size:0.65em;color:var(--text-muted);letter-spacing:0.2em">who chose</span><br>${state.drink}</h2>
         <div id="result-images">
           <figure>
-            <img src="${character.file}" alt="${state.character}">
-            <figcaption>${state.character}</figcaption>
-          </figure>
-          <figure>
-            <img src="${drink.file}" alt="${state.drink}">
-            <figcaption>${state.drink}</figcaption>
+            <img src="${comboImg}" alt="${state.character} with ${state.drink}" onerror="this.src='${character.file}';this.style.imageRendering='auto'">
           </figure>
         </div>
         <p id="result-description">${desc}</p>
