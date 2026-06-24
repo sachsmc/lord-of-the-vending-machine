@@ -58,5 +58,9 @@
   "maiar": {
     "file": "assets/images/maiar.png",
     "description": "Lesser angelic spirits, including Gandalf, Saruman, and the Balrogs. They can take physical form and walk among mortals, though their true nature is far older than the world."
+  },
+  "mearas": {
+    "file": "assets/images/mearas.png",
+    "description": "The noblest horses of Middle-earth, descended from Felaróf and numbering among them Shadowfax, who bore Gandalf across the land with unmatched speed. They cannot be tamed by ordinary means, and will carry only those they deem worthy."
   }
 }

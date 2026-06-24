@@ -322,26 +322,67 @@
       box-shadow: var(--shadow);
     }
 
+    #result-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      align-items: center;
+    }
+
+    #share-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 13px 32px;
+      background: var(--gold);
+      color: #0d0b08;
+      font-family: 'Cinzel', serif;
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      border: none;
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: background 0.15s, box-shadow 0.15s, transform 0.1s;
+      box-shadow: 0 0 20px var(--gold-glow);
+      min-width: 200px;
+      justify-content: center;
+    }
+
+    #share-btn:hover {
+      background: var(--gold-light);
+      box-shadow: 0 0 30px rgba(212, 178, 78, 0.35);
+    }
+
+    #share-btn:active {
+      transform: scale(0.98);
+    }
+
+    #share-btn.copied {
+      background: #4a7c59;
+      box-shadow: none;
+    }
+
     #restart-btn {
       display: inline-block;
-      padding: 12px 32px;
+      padding: 11px 32px;
       background: transparent;
-      color: var(--gold);
+      color: var(--text-muted);
       font-family: 'Cinzel', serif;
-      font-size: 0.78rem;
+      font-size: 0.75rem;
       font-weight: 600;
       letter-spacing: 0.14em;
       text-transform: uppercase;
-      border: 1px solid var(--gold);
+      border: 1px solid var(--border);
       border-radius: var(--radius);
       cursor: pointer;
-      transition: background 0.15s, color 0.15s, box-shadow 0.15s;
+      transition: border-color 0.15s, color 0.15s;
     }
 
     #restart-btn:hover {
-      background: var(--gold);
-      color: #0d0b08;
-      box-shadow: 0 0 20px var(--gold-glow);
+      border-color: var(--text-muted);
+      color: var(--text);
     }
 
     /* ── Loading / error ────────────────────────── */
@@ -372,6 +413,18 @@
     data.drinks = drinks;
     data.characters = characters;
     data.combinations = combinations;
+
+    // Restore shared result from URL hash
+    const hash = window.location.hash.slice(1);
+    if (hash) {
+      const [character, drink] = hash.split('|').map(decodeURIComponent);
+      if (character && drink && combinations[character]?.[drink]) {
+        state.character = character;
+        state.drink = drink;
+        state.step = 3;
+      }
+    }
+
     render();
   }
 
@@ -437,7 +490,10 @@
           </figure>
         </div>
         <p id="result-description">${desc}</p>
-        <button id="restart-btn">Take the quiz again</button>
+        <div id="result-actions">
+          <button id="share-btn">&#x2605; Share my result</button>
+          <button id="restart-btn">Take the quiz again</button>
+        </div>
       </div>
     `;
   }
@@ -445,6 +501,7 @@
   function render() {
     const app = document.getElementById("app");
     if (state.step === 1) {
+      history.replaceState(null, '', window.location.pathname);
       app.innerHTML = buildQuestion(
         "You are at an ice skating rink with your friends and are taking a break. You go to the vending machine and line up. You are first in line and are presented with these options. What do you choose?",
         data.drinks,
@@ -461,6 +518,8 @@
         2
       );
     } else {
+      const hash = encodeURIComponent(state.character) + '|' + encodeURIComponent(state.drink);
+      history.replaceState(null, '', '#' + hash);
       app.innerHTML = buildResult();
     }
   }
@@ -489,6 +548,26 @@
       state.character = null;
       window.scrollTo({ top: 0, behavior: 'smooth' });
       render();
+    }
+
+    if (e.target.id === "share-btn" || e.target.closest('#share-btn')) {
+      const btn = document.getElementById("share-btn");
+      const url = window.location.href;
+      const shareText = `I'm a ${state.character} who chose ${state.drink} — find out what your Lord of the Rings personality is!`;
+
+      if (navigator.share) {
+        navigator.share({ title: 'Lord of the Vending', text: shareText, url })
+          .catch(() => {});
+      } else {
+        navigator.clipboard.writeText(url).then(() => {
+          btn.textContent = '✓ Link copied!';
+          btn.classList.add('copied');
+          setTimeout(() => {
+            btn.innerHTML = '&#x2605; Share my result';
+            btn.classList.remove('copied');
+          }, 2500);
+        });
+      }
     }
   });
 
