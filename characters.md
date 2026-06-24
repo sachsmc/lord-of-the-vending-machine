@@ -1,9 +1,15 @@
 elf
 wizard
 ring wraith
-orc
+orc/uruk-hai
 hobbit
 dwarf
 tree
 human
 gollum
+dragon
+eagle
+warg
+giant spider
+valar
+maiar

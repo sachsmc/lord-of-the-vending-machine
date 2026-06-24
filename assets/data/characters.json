@@ -1,0 +1,62 @@
+{
+  "elf": {
+    "file": "assets/images/elf.png",
+    "description": "An immortal race with pointed ears, renowned for craftsmanship, poetry, and skill with a bow. They have lived in Middle-earth since the First Age."
+  },
+  "wizard": {
+    "file": "assets/images/wizard.png",
+    "description": "One of the five Istari sent to Middle-earth in mortal form. Appears as an old man carrying a staff, with powers over fire, light, and the minds of others."
+  },
+  "ring wraith": {
+    "file": "assets/images/ring-wraith.png",
+    "description": "Formerly great kings of Men, now wraith-like servants of Sauron bound to the Nine Rings. They ride black horses and inspire dread in all living things."
+  },
+  "orc/uruk-hai": {
+    "file": "assets/images/orc-uruk-hai.png",
+    "description": "Brutal warrior breed created by Saruman by crossing orcs with men. Larger, stronger, and able to travel in daylight — the shock troops of Isengard."
+  },
+  "hobbit": {
+    "file": "assets/images/hobbit.png",
+    "description": "Small, stout folk of the Shire, averaging three and a half feet tall. Known for their love of food, pipe-weed, and a quiet life — rarely seen beyond their own borders."
+  },
+  "dwarf": {
+    "file": "assets/images/dwarf.png",
+    "description": "Short, stocky, long-lived miners and smiths who dwell in mountain halls. Fiercely proud of their clans, their craft, and their beards."
+  },
+  "tree": {
+    "file": "assets/images/tree.png",
+    "description": "Ancient tree-herders of Fangorn Forest, the oldest living things in Middle-earth. Slow to speak, slow to decide, and formidable when roused to action."
+  },
+  "human": {
+    "file": "assets/images/human.png",
+    "description": "The mortal race spread across Middle-earth in many kingdoms. Shorter-lived than elves or dwarves, but ambitious, adaptable, and numerous."
+  },
+  "gollum": {
+    "file": "assets/images/gollum.png",
+    "description": "Once a Stoor hobbit named Sméagol, warped by five centuries of carrying the One Ring. Lives alone in caves, surviving on raw fish and speaking to himself in two voices."
+  },
+  "dragon": {
+    "file": "assets/images/dragon.png",
+    "description": "Enormous fire-breathing reptiles of great cunning and greed. Dragons hoard gold beneath mountains and can speak — though rarely to anyone's benefit."
+  },
+  "eagle": {
+    "file": "assets/images/eagle.png",
+    "description": "Giant eagles of the Misty Mountains, among the largest flying creatures in Middle-earth. They intervene rarely, but decisively, at critical moments."
+  },
+  "warg": {
+    "file": "assets/images/warg.png",
+    "description": "Large, wolf-like predators used as mounts by orcs. They hunt in packs and are found throughout the Misty Mountains and beyond."
+  },
+  "giant spider": {
+    "file": "assets/images/giant-spider.png",
+    "description": "Descendants of Ungoliant, dwelling in dark places such as Mirkwood and Cirith Ungol. They spin webs to trap prey and can grow to enormous size."
+  },
+  "valar": {
+    "file": "assets/images/valar.png",
+    "description": "The fourteen angelic powers who shaped the world under Ilúvatar. Each governs a domain — sea, sky, earth, craft — and dwells in the Undying Lands of Valinor."
+  },
+  "maiar": {
+    "file": "assets/images/maiar.png",
+    "description": "Lesser angelic spirits, including Gandalf, Saruman, and the Balrogs. They can take physical form and walk among mortals, though their true nature is far older than the world."
+  }
+}

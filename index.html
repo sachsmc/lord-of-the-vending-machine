@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lord of the Vending</title>
+</head>
+<body>
+
+<div id="app"><p>Loading...</p></div>
+
+<script>
+  let data = { drinks: null, characters: null, combinations: null };
+
+  const state = { step: 1, drink: null, character: null };
+
+  async function init() {
+    const [drinks, characters, combinations] = await Promise.all([
+      fetch("assets/data/drinks.json").then(r => r.json()),
+      fetch("assets/data/characters.json").then(r => r.json()),
+      fetch("assets/data/combinations.json").then(r => r.json()),
+    ]);
+    data.drinks = drinks;
+    data.characters = characters;
+    data.combinations = combinations;
+    render();
+  }
+
+  function render() {
+    const app = document.getElementById("app");
+    if (state.step === 1) {
+      app.innerHTML = buildQuestion(
+        "You are at an ice skating rink with your friends and are taking a break. " +
+        "You go to the vending machine and line up. You are first in line and are " +
+        "presented with these options. What do you choose?",
+        data.drinks,
+        "drink",
+        "Next"
+      );
+    } else if (state.step === 2) {
+      app.innerHTML = buildQuestion(
+        "Which race/species do you most closely identify with from Lord of the Rings?",
+        data.characters,
+        "character",
+        "See my result"
+      );
+    } else {
+      app.innerHTML = buildResult();
+    }
+  }
+
+  function buildQuestion(questionText, options, name, submitLabel) {
+    const optionsHTML = Object.entries(options).map(([key, val]) => `
+      <li>
+        <label>
+          <input type="radio" name="${name}" value="${key}">
+          <img src="${val.file}" alt="${key}">
+          <div>
+            <strong>${key}</strong>
+            <p>${val.description}</p>
+          </div>
+        </label>
+      </li>
+    `).join("");
+
+    return `
+      <form id="quiz-form">
+        <p>${questionText}</p>
+        <ul>${optionsHTML}</ul>
+        <button type="submit">${submitLabel}</button>
+      </form>
+    `;
+  }
+
+  function buildResult() {
+    const drink = data.drinks[state.drink];
+    const character = data.characters[state.character];
+    const description = data.combinations[state.character][state.drink];
+
+    return `
+      <div id="result">
+        <h2>${state.character} who drinks ${state.drink}</h2>
+        <div id="result-images">
+          <figure>
+            <img src="${character.file}" alt="${state.character}">
+            <figcaption>${state.character}</figcaption>
+          </figure>
+          <figure>
+            <img src="${drink.file}" alt="${state.drink}">
+            <figcaption>${state.drink}</figcaption>
+          </figure>
+        </div>
+        <p id="result-description">${description}</p>
+        <button id="restart-btn">Start over</button>
+      </div>
+    `;
+  }
+
+  document.getElementById("app").addEventListener("submit", function(e) {
+    e.preventDefault();
+    if (state.step === 1) {
+      const selected = document.querySelector('input[name="drink"]:checked');
+      if (!selected) return;
+      state.drink = selected.value;
+      state.step = 2;
+    } else if (state.step === 2) {
+      const selected = document.querySelector('input[name="character"]:checked');
+      if (!selected) return;
+      state.character = selected.value;
+      state.step = 3;
+    }
+    render();
+  });
+
+  document.getElementById("app").addEventListener("click", function(e) {
+    if (e.target.id === "restart-btn") {
+      state.step = 1;
+      state.drink = null;
+      state.character = null;
+      render();
+    }
+  });
+
+  init().catch(err => {
+    document.getElementById("app").innerHTML = `<p>Failed to load quiz data: ${err.message}</p>`;
+  });
+</script>
+
+</body>
+</html>
