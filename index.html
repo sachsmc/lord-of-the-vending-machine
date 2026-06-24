@@ -4,14 +4,363 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Lord of the Vending</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Lato:ital,wght@0,300;0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg:               #0d0b08;
+      --surface:          #26200f;
+      --surface-hover:    #302a15;
+      --surface-selected: #3a3015;
+      --gold:             #d4b24e;
+      --gold-light:       #eecf70;
+      --gold-glow:        rgba(212, 178, 78, 0.2);
+      --text:             #f0e8d4;
+      --text-muted:       #b09a78;
+      --border:           #453a20;
+      --border-selected:  #d4b24e;
+      --radius:           10px;
+      --shadow:           0 2px 16px rgba(0, 0, 0, 0.5);
+    }
+
+    body {
+      font-family: 'Lato', system-ui, sans-serif;
+      background-color: var(--bg);
+      background-image:
+        radial-gradient(ellipse at 15% 40%, rgba(120, 80, 20, 0.07) 0%, transparent 55%),
+        radial-gradient(ellipse at 85% 10%, rgba(80, 50, 10, 0.05) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 90%, rgba(100, 60, 0, 0.06) 0%, transparent 60%);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    #app {
+      max-width: 620px;
+      margin: 0 auto;
+      padding: 0 16px 60px;
+    }
+
+    /* ── Header ─────────────────────────────────── */
+
+    .quiz-header {
+      text-align: center;
+      padding: 36px 0 28px;
+    }
+
+    .quiz-header h1 {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(1.4rem, 5vw, 2rem);
+      font-weight: 700;
+      color: var(--gold);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      text-shadow: 0 0 40px rgba(201, 168, 76, 0.3);
+    }
+
+    .quiz-header .tagline {
+      margin-top: 6px;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    /* ── Ornament divider ───────────────────────── */
+
+    .ornament {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 0 0 28px;
+      color: var(--gold);
+      opacity: 0.6;
+    }
+
+    .ornament::before,
+    .ornament::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--gold);
+    }
+
+    .ornament span {
+      font-size: 0.65rem;
+      letter-spacing: 0.4em;
+    }
+
+    /* ── Step indicator ─────────────────────────── */
+
+    .step-indicator {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 16px;
+    }
+
+    .step-indicator .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--border);
+      border: 1px solid var(--text-muted);
+      transition: background 0.2s, border-color 0.2s;
+    }
+
+    .step-indicator .dot.active {
+      background: var(--gold);
+      border-color: var(--gold);
+      box-shadow: 0 0 6px var(--gold);
+    }
+
+    .step-indicator .label {
+      margin-left: 8px;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    /* ── Question ───────────────────────────────── */
+
+    .question-text {
+      font-size: 0.97rem;
+      line-height: 1.7;
+      color: var(--text);
+      margin-bottom: 22px;
+      font-style: italic;
+      padding-left: 14px;
+      border-left: 2px solid var(--gold);
+      opacity: 0.9;
+    }
+
+    /* ── Option list ────────────────────────────── */
+
+    ul.options {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 28px;
+    }
+
+    ul.options li label {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 14px 16px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s, box-shadow 0.15s;
+      box-shadow: var(--shadow);
+      user-select: none;
+    }
+
+    ul.options li label:hover {
+      background: var(--surface-hover);
+      border-color: #4a3c22;
+    }
+
+    ul.options li label:has(input:checked) {
+      background: var(--surface-selected);
+      border-color: var(--gold);
+      box-shadow: 0 0 0 1px var(--gold), var(--shadow), 0 0 20px var(--gold-glow);
+    }
+
+    ul.options input[type="radio"] {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    ul.options li label img {
+      width: 108px;
+      height: 108px;
+      object-fit: cover;
+      border-radius: 8px;
+      flex-shrink: 0;
+      border: 1px solid var(--border);
+      transition: border-color 0.15s;
+    }
+
+    ul.options li label:has(input:checked) img {
+      border-color: var(--gold);
+    }
+
+    .option-text {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .option-text strong {
+      display: block;
+      font-family: 'Cinzel', serif;
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 6px;
+      text-transform: capitalize;
+      transition: color 0.15s;
+    }
+
+    ul.options li label:has(input:checked) .option-text strong {
+      color: var(--gold-light);
+    }
+
+    .option-text p {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* ── Submit button ───────────────────────────── */
+
+    .submit-btn {
+      display: block;
+      width: 100%;
+      padding: 15px;
+      background: var(--gold);
+      color: #0d0b08;
+      font-family: 'Cinzel', serif;
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      border: none;
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: background 0.15s, box-shadow 0.15s, transform 0.1s;
+      box-shadow: 0 0 20px var(--gold-glow);
+    }
+
+    .submit-btn:hover {
+      background: var(--gold-light);
+      box-shadow: 0 0 30px rgba(201, 168, 76, 0.35);
+    }
+
+    .submit-btn:active {
+      transform: scale(0.98);
+    }
+
+    /* ── Result ─────────────────────────────────── */
+
+    #result {
+      text-align: center;
+      animation: fadeIn 0.5s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    #result h2 {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(1rem, 4vw, 1.35rem);
+      font-weight: 700;
+      color: var(--gold);
+      margin-bottom: 28px;
+      line-height: 1.5;
+      text-transform: capitalize;
+      text-shadow: 0 0 30px rgba(201, 168, 76, 0.25);
+    }
+
+    #result-images {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 24px;
+      margin-bottom: 32px;
+    }
+
+    #result-images figure {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      flex: 1;
+      max-width: 200px;
+    }
+
+    #result-images img {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+      border-radius: 12px;
+      border: 2px solid var(--gold);
+      box-shadow: 0 0 30px var(--gold-glow), var(--shadow);
+    }
+
+    #result-images figcaption {
+      font-family: 'Cinzel', serif;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      text-transform: capitalize;
+      letter-spacing: 0.08em;
+    }
+
+    #result-description {
+      font-size: 1.05rem;
+      line-height: 1.85;
+      color: var(--text);
+      text-align: left;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--gold);
+      border-radius: var(--radius);
+      padding: 22px 20px;
+      margin-bottom: 32px;
+      box-shadow: var(--shadow);
+    }
+
+    #restart-btn {
+      display: inline-block;
+      padding: 12px 32px;
+      background: transparent;
+      color: var(--gold);
+      font-family: 'Cinzel', serif;
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      border: 1px solid var(--gold);
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s, box-shadow 0.15s;
+    }
+
+    #restart-btn:hover {
+      background: var(--gold);
+      color: #0d0b08;
+      box-shadow: 0 0 20px var(--gold-glow);
+    }
+
+    /* ── Loading / error ────────────────────────── */
+
+    .status-msg {
+      text-align: center;
+      padding: 60px 0;
+      color: var(--text-muted);
+      font-style: italic;
+      font-size: 0.9rem;
+    }
+  </style>
 </head>
 <body>
 
-<div id="app"><p>Loading...</p></div>
+<div id="app"><p class="status-msg">Loading…</p></div>
 
 <script>
   let data = { drinks: null, characters: null, combinations: null };
-
   const state = { step: 1, drink: null, character: null };
 
   async function init() {
@@ -26,60 +375,57 @@
     render();
   }
 
-  function render() {
-    const app = document.getElementById("app");
-    if (state.step === 1) {
-      app.innerHTML = buildQuestion(
-        "You are at an ice skating rink with your friends and are taking a break. " +
-        "You go to the vending machine and line up. You are first in line and are " +
-        "presented with these options. What do you choose?",
-        data.drinks,
-        "drink",
-        "Next"
-      );
-    } else if (state.step === 2) {
-      app.innerHTML = buildQuestion(
-        "Which race/species do you most closely identify with from Lord of the Rings?",
-        data.characters,
-        "character",
-        "See my result"
-      );
-    } else {
-      app.innerHTML = buildResult();
-    }
+  function header() {
+    return `
+      <div class="quiz-header">
+        <h1>Lord of the Vending</h1>
+        <p class="tagline">A Middle-earth personality quiz</p>
+      </div>
+      <div class="ornament"><span>✦ ✦ ✦</span></div>
+    `;
   }
 
-  function buildQuestion(questionText, options, name, submitLabel) {
+  function stepDots(active) {
+    const dots = [1, 2].map(i =>
+      `<span class="dot ${i <= active ? 'active' : ''}"></span>`
+    ).join('');
+    return `<div class="step-indicator">${dots}<span class="label">Step ${active} of 2</span></div>`;
+  }
+
+  function buildQuestion(questionText, options, name, submitLabel, step) {
     const optionsHTML = Object.entries(options).map(([key, val]) => `
       <li>
         <label>
           <input type="radio" name="${name}" value="${key}">
-          <img src="${val.file}" alt="${key}">
-          <div>
+          <img src="${val.file}" alt="${key}" loading="lazy">
+          <div class="option-text">
             <strong>${key}</strong>
             <p>${val.description}</p>
           </div>
         </label>
       </li>
-    `).join("");
+    `).join('');
 
     return `
+      ${header()}
       <form id="quiz-form">
-        <p>${questionText}</p>
-        <ul>${optionsHTML}</ul>
-        <button type="submit">${submitLabel}</button>
+        ${stepDots(step)}
+        <p class="question-text">${questionText}</p>
+        <ul class="options">${optionsHTML}</ul>
+        <button type="submit" class="submit-btn">${submitLabel}</button>
       </form>
     `;
   }
 
   function buildResult() {
-    const drink = data.drinks[state.drink];
+    const drink     = data.drinks[state.drink];
     const character = data.characters[state.character];
-    const description = data.combinations[state.character][state.drink];
+    const desc      = data.combinations[state.character][state.drink];
 
     return `
+      ${header()}
       <div id="result">
-        <h2>${state.character} who drinks ${state.drink}</h2>
+        <h2>${state.character}<br><span style="font-size:0.65em;color:var(--text-muted);letter-spacing:0.2em">who chose</span><br>${state.drink}</h2>
         <div id="result-images">
           <figure>
             <img src="${character.file}" alt="${state.character}">
@@ -90,25 +436,49 @@
             <figcaption>${state.drink}</figcaption>
           </figure>
         </div>
-        <p id="result-description">${description}</p>
-        <button id="restart-btn">Start over</button>
+        <p id="result-description">${desc}</p>
+        <button id="restart-btn">Take the quiz again</button>
       </div>
     `;
+  }
+
+  function render() {
+    const app = document.getElementById("app");
+    if (state.step === 1) {
+      app.innerHTML = buildQuestion(
+        "You are at an ice skating rink with your friends and are taking a break. You go to the vending machine and line up. You are first in line and are presented with these options. What do you choose?",
+        data.drinks,
+        "drink",
+        "Next →",
+        1
+      );
+    } else if (state.step === 2) {
+      app.innerHTML = buildQuestion(
+        "Which race or species do you most closely identify with from Lord of the Rings?",
+        data.characters,
+        "character",
+        "See my result",
+        2
+      );
+    } else {
+      app.innerHTML = buildResult();
+    }
   }
 
   document.getElementById("app").addEventListener("submit", function(e) {
     e.preventDefault();
     if (state.step === 1) {
-      const selected = document.querySelector('input[name="drink"]:checked');
-      if (!selected) return;
-      state.drink = selected.value;
+      const sel = document.querySelector('input[name="drink"]:checked');
+      if (!sel) return;
+      state.drink = sel.value;
       state.step = 2;
     } else if (state.step === 2) {
-      const selected = document.querySelector('input[name="character"]:checked');
-      if (!selected) return;
-      state.character = selected.value;
+      const sel = document.querySelector('input[name="character"]:checked');
+      if (!sel) return;
+      state.character = sel.value;
       state.step = 3;
     }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
     render();
   });
 
@@ -117,12 +487,14 @@
       state.step = 1;
       state.drink = null;
       state.character = null;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
       render();
     }
   });
 
   init().catch(err => {
-    document.getElementById("app").innerHTML = `<p>Failed to load quiz data: ${err.message}</p>`;
+    document.getElementById("app").innerHTML =
+      `<p class="status-msg">Failed to load quiz data: ${err.message}</p>`;
   });
 </script>
 
