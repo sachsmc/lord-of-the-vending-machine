@@ -7,9 +7,9 @@
     "file": "assets/images/drinks/cocoa-with-marshmallows.png",
     "description": "Hot cocoa topped with soft white marshmallows. The marshmallows melt slowly into the surface, adding sweetness and a foamy texture."
   },
-  "chicken broth": {
+  "broth": {
     "file": "assets/images/drinks/chicken-broth.png",
-    "description": "A clear, savoury liquid made by simmering chicken bones and vegetables. Lightly salted, warming, and often used as a restorative."
+    "description": "A clear, savoury liquid made by simmering bones and vegetables. Lightly salted, warming, and often used as a restorative."
   },
   "black coffee": {
     "file": "assets/images/drinks/black-coffee.png",

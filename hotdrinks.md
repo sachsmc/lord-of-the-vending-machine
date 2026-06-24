@@ -1,6 +1,6 @@
 cocoa
 cocoa with marshmallows
-chicken broth
+broth
 black coffee
 caffe latte
 hot water
